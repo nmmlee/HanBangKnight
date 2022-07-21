@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
@@ -13,22 +14,51 @@ public class Enemy : MonoBehaviour
     public float curTime;
     public float maxTime;
 
+    public bool isReady;
+
+    Text enemyPowerText;
+    Image enemyHpbar;
+
     void Start()
     {
-        maxTime = Random.Range(1.5f, 2f);
+        maxTime = Random.Range(7f, 10f);
+        enemyPowerText = GetComponentInChildren<Text>();
+        enemyHpbar = GetComponentsInChildren<Image>()[1];
     }
 
     void Update()
     {
-        curTime += Time.deltaTime;
-        if(curTime >= maxTime)
+        if(isReady)
         {
-            AttackReady();
-            curTime = 0;
-
-            maxTime = Random.Range(1.5f, 2f);
+            enemyHpbar.color = new Color(0, 0, 255);
+            enemyHpbar.fillAmount += Time.deltaTime;
         }
 
+        else
+        {
+            enemyHpbar.color = new Color(255, 0, 0);
+            curTime += Time.deltaTime;
+
+            if (curTime >= maxTime)
+            {
+                curTime = 0;
+                maxTime = Random.Range(7f, 10f);
+            }
+        }
+
+        if(enemyHpbar.fillAmount == 1)
+        {
+            isReady = false;
+            AttackReady();
+        }
+
+        else if(enemyHpbar.fillAmount == 0)
+        {
+            isReady = true;
+        }
+
+        enemyPowerText.text = "ÀüÅõ·Â : " + enemyPower;
+        enemyHpbar.fillAmount -= (Time.deltaTime / maxTime);
     }
 
     void AttackReady()
