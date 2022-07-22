@@ -19,14 +19,13 @@ public class Enemy : MonoBehaviour
 
     Text enemyPowerText;
     Text enemyStateText;
-    Image enemyHpbar;
+    public Image enemyHpbar;
 
     void Start()
     {
         maxTime = Random.Range(7f, 10f);
         enemyPowerText = GetComponentsInChildren<Text>()[0];
         enemyStateText = GetComponentsInChildren<Text>()[1];
-        enemyHpbar = GetComponentsInChildren<Image>()[1];
         
     }
 
@@ -115,5 +114,10 @@ public class Enemy : MonoBehaviour
     public void Death()
     {
         gameObject.SetActive(false);
+    }
+
+    public void StateChange()
+    {
+        enemyHpbar.fillAmount = 0;
     }
 }

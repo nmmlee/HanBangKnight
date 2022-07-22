@@ -66,6 +66,7 @@ public class GameManager : MonoBehaviour
             else if (enemy.isEnemySurpriseAttack)
             {
                 player.power -= 1;
+                enemy.StateChange();
                 AllFalse();
             }
         }
@@ -82,6 +83,7 @@ public class GameManager : MonoBehaviour
             else if (enemy.isEnemyShield)
             {
                 Debug.Log("아무일도 없었다...");
+                enemy.StateChange();
                 AllFalse();
             }
 
@@ -106,6 +108,7 @@ public class GameManager : MonoBehaviour
                 else
                 {
                     enemy.enemyPower -= 1;
+                    enemy.StateChange();
                     AllFalse();
                 }
             }
@@ -120,6 +123,7 @@ public class GameManager : MonoBehaviour
             else if (enemy.isEnemySurpriseAttack)
             {
                 Debug.Log("아무일도 없었다...");
+                enemy.StateChange();
                 AllFalse();
             }
         }

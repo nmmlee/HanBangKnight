@@ -564,3 +564,4 @@ MonoBehaviour:
   maxTime: 0
   isReady: 0
   isAnim: 0
+  enemyHpbar: {fileID: 3464106327497755365}
