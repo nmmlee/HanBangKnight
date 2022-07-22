@@ -15,20 +15,38 @@ public class Enemy : MonoBehaviour
     public float maxTime;
 
     public bool isReady;
+    public bool isAnim;
 
     Text enemyPowerText;
+    Text enemyStateText;
     Image enemyHpbar;
 
     void Start()
     {
         maxTime = Random.Range(7f, 10f);
-        enemyPowerText = GetComponentInChildren<Text>();
+        enemyPowerText = GetComponentsInChildren<Text>()[0];
+        enemyStateText = GetComponentsInChildren<Text>()[1];
         enemyHpbar = GetComponentsInChildren<Image>()[1];
+        
     }
 
     void Update()
     {
-        if(isReady)
+        if (transform.position.x >= 2)
+        {
+            isAnim = true;
+            transform.Translate(Vector2.left * Time.deltaTime);
+        }
+        else
+        {
+            isAnim = false;
+            UpdateUI();
+        }
+    }
+
+    void UpdateUI()
+    {
+        if (isReady)
         {
             enemyHpbar.color = new Color(0, 0, 255);
             enemyHpbar.fillAmount += Time.deltaTime;
@@ -46,13 +64,13 @@ public class Enemy : MonoBehaviour
             }
         }
 
-        if(enemyHpbar.fillAmount == 1)
+        if (enemyHpbar.fillAmount == 1)
         {
             isReady = false;
             AttackReady();
         }
 
-        else if(enemyHpbar.fillAmount == 0)
+        else if (enemyHpbar.fillAmount == 0)
         {
             isReady = true;
         }
@@ -71,20 +89,31 @@ public class Enemy : MonoBehaviour
                 isEnemyStab = true;
                 isEnemyShield = false;
                 isEnemySurpriseAttack = false;
+
+                enemyStateText.text = "Stab";
                 break;
 
             case 1:
                 isEnemyStab = false;
                 isEnemyShield = true;
                 isEnemySurpriseAttack = false;
+
+                enemyStateText.text = "Shield";
                 break;
 
             case 2:
                 isEnemyStab = false;
                 isEnemyShield = false;
                 isEnemySurpriseAttack = true;
+
+                enemyStateText.text = "SurpriseAttack";
                 break;
 
         }
+    }
+
+    public void Death()
+    {
+        gameObject.SetActive(false);
     }
 }
