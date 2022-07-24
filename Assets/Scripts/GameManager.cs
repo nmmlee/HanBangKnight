@@ -82,7 +82,7 @@ public class GameManager : MonoBehaviour
 
             else if (enemy.isEnemyShield)
             {
-                Debug.Log("아무일도 없었다...");
+                enemy.enemyPower += 1;
                 enemy.StateChange();
                 AllFalse();
             }

@@ -23,7 +23,7 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
-        maxTime = Random.Range(7f, 10f);
+        maxTime = Random.Range(1f, 3f);
         enemyPowerText = GetComponentsInChildren<Text>()[0];
         enemyStateText = GetComponentsInChildren<Text>()[1];
         
@@ -59,7 +59,7 @@ public class Enemy : MonoBehaviour
             if (curTime >= maxTime)
             {
                 curTime = 0;
-                maxTime = Random.Range(7f, 10f);
+                maxTime = Random.Range(1f, 3f);
             }
         }
 
