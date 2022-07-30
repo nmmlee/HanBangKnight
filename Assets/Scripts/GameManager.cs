@@ -9,11 +9,29 @@ public class GameManager : MonoBehaviour
     public bool isShield;
     public bool isSurpriseAttack;
 
+    public bool stabButtonActive;
+    public bool shieldButtonActive;
+    public bool sAButtonActive;
+
     public Player player;
     public GameObject enemyObj;
     public Transform spawnTransfrom;
 
+    public GameObject meteorObj;
+    public Transform spawnMeteorTransform;
+    
+    public Button[] buttons;
+    public Text contributionText;
+    public Text seasonText;
+
+    public int contribution;
+
+    string[] seasons = { "º½", "¿©¸§", "°¡À»", "°Ü¿ï" };
+    int seasonTime = 0;
+    int seasonCount = 0;
+
     bool isSpawn = false;
+    int meteorSpawnCnt = 1;
 
     [SerializeField]
     Enemy enemy;
@@ -24,6 +42,25 @@ public class GameManager : MonoBehaviour
 
         AttackCheck();
         SpawnEnemy();
+        SpawnMeteor();
+        UpdateUI();
+        ChangeSeason();
+    }
+
+    void ChangeSeason()
+    {
+        if (seasonTime == 3)
+        {
+            seasonCount = (seasonCount >= 3) ? seasonCount = 0 : seasonCount += 1;
+            seasonTime = 0;
+        }
+    }
+
+    void UpdateUI()
+    {
+        contributionText.text = "°øÇåµµ : " + contribution;
+        seasonText.text = seasons[seasonCount];
+
     }
 
     void SpawnEnemy()
@@ -39,6 +76,15 @@ public class GameManager : MonoBehaviour
 
     }
 
+    void SpawnMeteor()
+    {
+        if(meteorSpawnCnt % 3 == 0)
+        {
+            Instantiate(meteorObj, spawnMeteorTransform.position, spawnMeteorTransform.rotation);
+            meteorSpawnCnt = 1;
+        }
+    }
+
     void AttackCheck()
     {
         if (isStab)
@@ -48,25 +94,36 @@ public class GameManager : MonoBehaviour
                 if (player.power > enemy.enemyPower)
                 {
                     enemy.Death();
+                    contribution++;
+                    meteorSpawnCnt++;
+                    seasonTime++;
+
+
                     isSpawn = false;
                     AllFalse();
                 }
                 else
                 {
-                    Debug.Log("Á×¾ú´Ù¤Ð¤Ð");
+                    PlayerDeath();
+                    isSpawn = false;
                     AllFalse();
                 }
             }
             else if (enemy.isEnemyShield)
             {
-                Debug.Log("Á×¾ú´Ù ¤Ð¤Ð");
+                PlayerDeath();
+                isSpawn = false;
                 AllFalse();
             }
 
             else if (enemy.isEnemySurpriseAttack)
             {
-                player.power -= 1;
-                enemy.StateChange();
+                enemy.Death();
+                contribution++;
+                meteorSpawnCnt++;
+                seasonTime++;
+
+                isSpawn = false;
                 AllFalse();
             }
         }
@@ -76,6 +133,10 @@ public class GameManager : MonoBehaviour
             if (enemy.isEnemyStab)
             {
                 enemy.Death();
+                contribution++;
+                meteorSpawnCnt++;
+                seasonTime++;
+
                 isSpawn = false;
                 AllFalse();
             }
@@ -89,7 +150,8 @@ public class GameManager : MonoBehaviour
 
             else if (enemy.isEnemySurpriseAttack)
             {
-                Debug.Log("Á×¾úµû ¤Ð¤Ð");
+                PlayerDeath();
+                isSpawn = false;
                 AllFalse();
             }
 
@@ -101,7 +163,7 @@ public class GameManager : MonoBehaviour
             {
                 if (player.power > enemy.enemyPower)
                 {
-                    enemy.Death();
+                    PlayerDeath();
                     isSpawn = false;
                     AllFalse();
                 }
@@ -116,13 +178,17 @@ public class GameManager : MonoBehaviour
             else if (enemy.isEnemyShield)
             {
                 enemy.Death();
+                contribution++;
+                meteorSpawnCnt++;
+                seasonTime++;
+
                 isSpawn = false;
                 AllFalse();
             }
 
             else if (enemy.isEnemySurpriseAttack)
             {
-                Debug.Log("¾Æ¹«ÀÏµµ ¾ø¾ú´Ù...");
+                enemy.enemyPower -= 1;
                 enemy.StateChange();
                 AllFalse();
             }
@@ -134,6 +200,13 @@ public class GameManager : MonoBehaviour
         isStab = true;
         isShield = false;
         isSurpriseAttack = false;
+
+        stabButtonActive = false;
+        shieldButtonActive = true;
+        sAButtonActive = true;
+
+        Disabled();
+
     }
 
     public void Shield()
@@ -141,6 +214,12 @@ public class GameManager : MonoBehaviour
         isShield = true;
         isSurpriseAttack = false;
         isStab = false;
+
+        stabButtonActive = true;
+        shieldButtonActive = false;
+        sAButtonActive = true;
+
+        Disabled();
     }
 
     public void SurpriseAttack()
@@ -148,6 +227,12 @@ public class GameManager : MonoBehaviour
         isSurpriseAttack = true;
         isShield = false;
         isStab = false;
+
+        stabButtonActive = true;
+        shieldButtonActive = true;
+        sAButtonActive = false;
+
+        Disabled();
     }
 
     void AllFalse()
@@ -155,5 +240,19 @@ public class GameManager : MonoBehaviour
         isSurpriseAttack = false;
         isShield = false;
         isStab = false;
+
+        Disabled();
+    }
+
+    void Disabled()
+    {
+        buttons[0].interactable = stabButtonActive;
+        buttons[1].interactable = shieldButtonActive;
+        buttons[2].interactable = sAButtonActive;
+    }
+
+    public void PlayerDeath()
+    {
+        Debug.Log("Á×¾ú´Ù ¤Ð¤Ð");
     }
 }

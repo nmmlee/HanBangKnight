@@ -17,12 +17,17 @@ public class Enemy : MonoBehaviour
     public bool isReady;
     public bool isAnim;
 
+    public Image enemyHpbar;
+
     Text enemyPowerText;
     Text enemyStateText;
-    public Image enemyHpbar;
+
+    GameManager gameManager;
+    
 
     void Start()
     {
+        gameManager = FindObjectOfType<GameManager>();
         maxTime = Random.Range(1f, 3f);
         enemyPowerText = GetComponentsInChildren<Text>()[0];
         enemyStateText = GetComponentsInChildren<Text>()[1];
@@ -72,6 +77,10 @@ public class Enemy : MonoBehaviour
         else if (enemyHpbar.fillAmount == 0)
         {
             isReady = true;
+            if(isEnemyStab || isEnemySurpriseAttack)
+            {
+                gameManager.PlayerDeath();
+            }
         }
 
         enemyPowerText.text = "ÀüÅõ·Â : " + enemyPower;
