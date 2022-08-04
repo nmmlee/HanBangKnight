@@ -16,6 +16,7 @@ public class Enemy : MonoBehaviour
 
     public bool isReady;
     public bool isAnim;
+    public bool isInteract;
 
     public Image enemyHpbar;
 
@@ -36,6 +37,7 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
+
         if (transform.position.x >= 2)
         {
             isAnim = true;
@@ -50,6 +52,7 @@ public class Enemy : MonoBehaviour
 
     void UpdateUI()
     {
+
         if (isReady)
         {
             enemyHpbar.color = new Color(0, 0, 255);
@@ -77,7 +80,8 @@ public class Enemy : MonoBehaviour
         else if (enemyHpbar.fillAmount == 0)
         {
             isReady = true;
-            if(isEnemyStab || isEnemySurpriseAttack)
+
+            if((isEnemyStab || isEnemySurpriseAttack) && !isInteract)
             {
                 gameManager.PlayerDeath();
             }
@@ -128,5 +132,6 @@ public class Enemy : MonoBehaviour
     public void StateChange()
     {
         enemyHpbar.fillAmount = 0;
+        isInteract = true;
     }
 }
